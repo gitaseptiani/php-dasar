@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+
 $mysqli = new mysqli('localhost', 'root', '', 'tedc');
 
 $result = $mysqli->query("SELECT students.nim, students.nama, study_programs.name 
@@ -7,11 +10,12 @@ $result = $mysqli->query("SELECT students.nim, students.nama, study_programs.nam
                          WHERE study_programs.study_programs_id = 11 OR students.program_studi IS NULL;
                          ");
 
-$mahasiswa = [];
-while ($row = $result->fetch_assoc()) {
-    array_push($mahasiswa, $row);
-}
+    $mahasiswa = [];
+    while ($row = $result->fetch_assoc()) {
+        array_push($mahasiswa, $row);
+    }
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -24,6 +28,17 @@ while ($row = $result->fetch_assoc()) {
 <body>
     <div class="container mt-4">
         <h2 class="mb-3 text-center">Daftar Mahasiswa Politeknik TEDC Bandung</h2>
+        <?php
+        if (isset($_SESSION['success_message'])) {
+        echo "<div class='alert alert-success' role='alert'>{$_SESSION['success_message']}</div>";
+        unset($_SESSION['success_message']); // Hapus pesan setelah ditampilkan
+    }
+
+    if (isset($_SESSION['error_message'])) {
+        echo "<div class='alert alert-danger' role='alert'>{$_SESSION['error_message']}</div>";
+        unset($_SESSION['error_message']); // Hapus pesan setelah ditampilkan
+    }
+    ?>
         <a href="tambah_mahasiswa.php" class="btn btn-primary mb-3">Tambah Mahasiswa</a>
         <table class="table table-hover table-striped table-bordered">
             <thead class="table-dark">

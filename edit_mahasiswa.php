@@ -1,4 +1,7 @@
 <?php
+
+session_start(); // Mulai session
+
 $mysqli = new mysqli('localhost', 'root', '', 'tedc');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -10,12 +13,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param('sis', $nama, $program_studi, $nim);
 
     if ($stmt->execute()) {
-        echo "<script>alert; window.location.href='mahasiswa.php';</script>";
+        $_SESSION['success_message'] = 'Data berhasil diubah!';
+        header('Location: mahasiswa.php'); // Redirect ke halaman mahasiswa.php
+        exit();
     } else {
-        echo "<script>alert" . $stmt->error . "');</script>";
+        $_SESSION['error_message'] = 'Gagal menambahkan data: ' . $stmt->error;
     }
 
-    $stmt->close();
+    $stmt->close(); // Tutup statement
 }
 
 $nim = $_GET['nim'];

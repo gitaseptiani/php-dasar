@@ -1,6 +1,8 @@
 <?php
 // tambah_mahasiswa.php
 
+session_start(); // Mulai session
+
 $mysqli = new mysqli('localhost', 'root', '', 'tedc');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -12,16 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param('ssi', $nim, $nama, $program_studi);
 
     if ($stmt->execute()) {
-        echo "<script>alert('Data berhasil ditambahkan!'); window.location.href='mahasiswa.php';</script>";
+        $_SESSION['success_message'] = 'Data berhasil ditambahkan!';
+        header('Location: mahasiswa.php'); // Redirect ke halaman mahasiswa.php
+        exit();
     } else {
-        echo "<script>alert('Gagal menambahkan data: " . $stmt->error . "');</script>";
+        $_SESSION['error_message'] = 'Gagal menambahkan data: ' . $stmt->error;
     }
 
-    $stmt->exit();
+    $stmt->close(); // Tutup statement
 }
 
 $study_programs = $mysqli->query("SELECT * FROM study_programs");
 ?>
+
 
 <!DOCTYPE html>
 <html>
